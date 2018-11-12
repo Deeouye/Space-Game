@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FighterAI : MonoBehaviour {
-
-    public Transform target;
-
+    
+    public Vector3 dest;
     private FighterBehavior fb;
-    private Vector3 dest;
     private Quaternion targetRotation;
 
 	// Use this for initialization
 	void Start () {
         fb = GetComponent<FighterBehavior>();
-        dest = target.position;
     }
 	
 	// Update is called once per frame
@@ -26,8 +23,7 @@ public class FighterAI : MonoBehaviour {
     private void FixedUpdate()
     {
         Vector3 currEulerAngles, targetEulerAngles;
-
-        dest = target.position;
+        
         currEulerAngles = transform.rotation.eulerAngles;
         fb.yawAmt = 0;
         fb.pitchAmt = 0;

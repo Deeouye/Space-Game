@@ -74,9 +74,9 @@ public class PlayerController : MonoBehaviour
         {
             boost *= 2f;
         }
-        if (Input.GetKey(KeyCode.LeftControl))
+        if (Input.GetKey(KeyCode.U))
         {
-            boost /= 2;
+            boost = 0;
         }
 
 
