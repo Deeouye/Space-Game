@@ -20,6 +20,7 @@ public class FighterBehavior : MonoBehaviour {
     private bool moving;
     private float boost;
     private float secsSinceLastFire;
+    private Quaternion modelTargetRot;
 
 
     // Use this for initialization
@@ -53,5 +54,9 @@ public class FighterBehavior : MonoBehaviour {
 
         // Constantly move forward. In space, if you stop moving, you die.
         rb.velocity = transform.forward * speed * boost;
+
+
+        modelTargetRot = Quaternion.Euler(0, 0, -30 * yawAmt);
+
     }
 }
