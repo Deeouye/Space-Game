@@ -20,7 +20,7 @@ public class FighterBehavior : MonoBehaviour {
     private bool moving;
     private float boost;
     private float secsSinceLastFire;
-    private Quaternion modelTargetRot;
+    private Quaternion targetRot, modelTargetRot;
 
 
     // Use this for initialization
@@ -54,6 +54,13 @@ public class FighterBehavior : MonoBehaviour {
 
         // Constantly move forward. In space, if you stop moving, you die.
         rb.velocity = transform.forward * speed * boost;
+
+        // Rotate base on controls
+        transform.Rotate(pitchAmt * pitchSpeed, yawAmt * turnSpeed, 0);
+
+        targetRot = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime / (moving ? 5 : 2));
+        //transform.rotation = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0);
 
 
         modelTargetRot = Quaternion.Euler(0, 0, -30 * yawAmt);

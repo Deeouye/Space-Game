@@ -25,7 +25,7 @@ public class PlayerController : MonoBehaviour
     private bool moving;
     private float boost;
     private float secsSinceLastFire;
-    private Quaternion cameraTargetRot, modelTargetRot;
+    private Quaternion targetRot, modelTargetRot;
     private Vector3 cameraTarget;
     private float targetFOV;
 
@@ -72,7 +72,7 @@ public class PlayerController : MonoBehaviour
         boost = 1;
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            boost *= 2;
+            boost *= 2f;
         }
         if (Input.GetKey(KeyCode.LeftControl))
         {
@@ -86,8 +86,8 @@ public class PlayerController : MonoBehaviour
         // Rotate base on controls
         transform.Rotate(vert * pitchSpeed, horiz * turnSpeed, 0);
 
-        cameraTargetRot = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0);
-        transform.rotation = Quaternion.Slerp(transform.rotation, cameraTargetRot, Time.deltaTime / (moving ? 5 : 2));
+        targetRot = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime / (moving ? 5 : 2));
 
 
         // Camera and model movement

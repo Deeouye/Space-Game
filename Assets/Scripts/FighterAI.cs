@@ -4,12 +4,17 @@ using UnityEngine;
 
 public class FighterAI : MonoBehaviour {
 
+    public Transform target;
+
     private FighterBehavior fb;
+    private Vector3 dest;
+    private Quaternion targetRotation;
 
 	// Use this for initialization
 	void Start () {
         fb = GetComponent<FighterBehavior>();
-	}
+        dest = target.position;
+    }
 	
 	// Update is called once per frame
 	void Update () {
@@ -20,7 +25,30 @@ public class FighterAI : MonoBehaviour {
 
     private void FixedUpdate()
     {
+        Vector3 currEulerAngles, targetEulerAngles;
 
+        dest = target.position;
+        currEulerAngles = transform.rotation.eulerAngles;
+        fb.yawAmt = 0;
+        fb.pitchAmt = 0;
+         
+
+        // Fly to point
+        Vector3 direction = (dest - transform.position).normalized;
+        targetRotation = Quaternion.LookRotation(direction);
+        targetEulerAngles = targetRotation.eulerAngles;
+        //targetEulerAngles = new Vector3(-15, 45, 0);
+        float xdiff = Mathf.DeltaAngle(currEulerAngles.x, targetEulerAngles.x);
+        if (Mathf.Abs(xdiff) > fb.pitchSpeed)
+        {
+            fb.pitchAmt = (xdiff > 0 ? 1 : -1);
+        }
+
+        float ydiff = Mathf.DeltaAngle(currEulerAngles.y, targetEulerAngles.y);
+        if (Mathf.Abs(ydiff) > fb.turnSpeed)
+        {
+            fb.yawAmt = (ydiff > 0 ? 1 : -1);
+        }
 
         fb.FighterFixedUpdate();
     }
