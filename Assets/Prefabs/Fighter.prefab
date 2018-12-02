@@ -201,7 +201,7 @@ GameObject:
   - component: {fileID: 114899859791311188}
   m_Layer: 0
   m_Name: Fighter
-  m_TagString: Untagged
+  m_TagString: Fighter
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -273,7 +273,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1706339364562716}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: -687.6, y: 2.1, z: 19.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 4734815383183732}
@@ -753,15 +753,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d55b8db22dc4fe246b5e9984de49b3c6, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  modelTransform: {fileID: 4058815358708728}
   speed: 100
   pitchSpeed: 1
   turnSpeed: 1
   fireRate: 4
-  boosting: 0
-  braking: 0
+  bullet: {fileID: 1119784657834342, guid: dfc5938c6ce1c8e4588066229447c10d, type: 2}
+  team: 2
   pitchAmt: 0
   yawAmt: 0
+  boost: 0
+  firing: 0
 --- !u!114 &114899859791311188
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -773,4 +774,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95742b1190b78614698ecf01d790566e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  dest: {x: 0, y: 0, z: 0}

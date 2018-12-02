@@ -5,25 +5,18 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour
 {
     // Public fields
-    public float speed = 100;
-    public float pitchSpeed = 1;
-    public float turnSpeed = 1;
-    public float fireRate = 4;
     public GameObject explosion;
-    public GameObject bullet;
     public Transform cameraTransform;
     public Transform modelTransform;
 
     // Private fields
     private Rigidbody rb;
     private MeshCollider coll;
+    private FighterBehavior fb;
 
-    private float vert;
-    private float horiz;
     private float vertRaw;
     private float horizRaw;
     private bool moving;
-    private float boost;
     private float secsSinceLastFire;
     private Quaternion targetRot, modelTargetRot;
     private Vector3 cameraTarget;
@@ -34,6 +27,7 @@ public class PlayerController : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         coll = GetComponentInChildren<MeshCollider>();
+        fb = GetComponent<FighterBehavior>();
     }
 
     // Update is called once per frame
@@ -47,47 +41,28 @@ public class PlayerController : MonoBehaviour
             temp.transform.parent = null;
             temp.transform.position = transform.position + (Random.insideUnitSphere * 20);
         }
-        
-        
-        if (Input.GetButton("Fire1") && secsSinceLastFire > 1 / fireRate)
-        {
-            GameObject temp;
-            temp = Instantiate(bullet, transform.position, transform.rotation);
-            temp.transform.parent = null;
-            secsSinceLastFire = 0;
-        }
 
-        secsSinceLastFire += Time.deltaTime;
+        fb.firing = Input.GetButton("Fire1");
+
+        fb.FighterUpdate();
     }
     void FixedUpdate()
     {
-        vert = Input.GetAxis("Vertical");
-        horiz = Input.GetAxis("Horizontal");
+        fb.pitchAmt = Input.GetAxis("Vertical");
+        fb.yawAmt = Input.GetAxis("Horizontal");
         vertRaw = Input.GetAxisRaw("Vertical");
         horizRaw = Input.GetAxisRaw("Horizontal");
 
-        moving = horizRaw != 0 || vertRaw != 0;
-
         // Boost and brake
-        boost = 1;
+        fb.boost = 1;
         if (Input.GetKey(KeyCode.LeftShift))
         {
-            boost *= 2f;
+            fb.boost *= 2f;
         }
         if (Input.GetKey(KeyCode.U))
         {
-            boost = 0;
+            fb.boost = 0;
         }
-
-
-        // Constantly move forward. In space, if you stop moving, you die.
-        rb.velocity = transform.forward * speed * boost;
-
-        // Rotate base on controls
-        transform.Rotate(vert * pitchSpeed, horiz * turnSpeed, 0);
-
-        targetRot = Quaternion.Euler(transform.rotation.eulerAngles.x, transform.rotation.eulerAngles.y, 0);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRot, Time.deltaTime / (moving ? 5 : 2));
 
 
         // Camera and model movement
@@ -95,22 +70,22 @@ public class PlayerController : MonoBehaviour
         modelTargetRot = Quaternion.identity;
         if (horizRaw > 0)
         {
-            cameraTarget += Vector3.right * 10 * horiz;
-            modelTargetRot = Quaternion.Euler(0, 0, -30 * horiz);
+            cameraTarget += Vector3.right * 10 * fb.yawAmt;
+            modelTargetRot = Quaternion.Euler(0, 0, -30 * fb.yawAmt);
         }
         else if (horizRaw < 0)
         {
-            cameraTarget += Vector3.left * 10 * -horiz;
-            modelTargetRot = Quaternion.Euler(0, 0, 30 * -horiz);
+            cameraTarget += Vector3.left * 10 * -fb.yawAmt;
+            modelTargetRot = Quaternion.Euler(0, 0, 30 * -fb.yawAmt);
         }
 
         if (vertRaw > 0)
         {
-            cameraTarget += Vector3.down * 6 * vert;
+            cameraTarget += Vector3.down * 6 * fb.pitchAmt;
         }
         else if (vertRaw < 0)
         {
-            cameraTarget += Vector3.up * 6 * -vert;
+            cameraTarget += Vector3.up * 6 * -fb.pitchAmt;
         }
 
         cameraTransform.localPosition = Vector3.Lerp(cameraTransform.localPosition, cameraTarget, Time.deltaTime * 2);
@@ -118,14 +93,16 @@ public class PlayerController : MonoBehaviour
 
         // Camera FOV based on boost
         targetFOV = 60;
-        if (boost > 1)
+        if (fb.boost > 1)
         {
             targetFOV = 80;
         }
-        else if (boost < 1)
+        else if (fb.boost < 1)
         {
             targetFOV = 45;
         }
         Camera.main.fieldOfView = Mathf.Lerp(Camera.main.fieldOfView, targetFOV, Time.deltaTime * 2);
+
+        fb.FighterFixedUpdate();
     }
 }

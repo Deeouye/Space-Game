@@ -7,6 +7,8 @@ public class BulletBehavior : MonoBehaviour {
     private CapsuleCollider col;
     private Rigidbody rb;
 
+    public int team;
+
 	// Use this for initialization
 	void Start () {
         col = GetComponentInChildren<CapsuleCollider>();

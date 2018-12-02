@@ -18,15 +18,16 @@ public class FighterSpawner : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
         cooldown -= Time.deltaTime;
-		if (cooldown <= 0 && counter < 1500)
+		if (cooldown <= 0 && counter < 100)
         {
             GameObject newobj = Instantiate(fighter, transform);
             newobj.transform.parent = null;
-            newobj.GetComponent<FighterAI>().dest = (Random.insideUnitSphere * 2000) + transform.position;
-            newobj.GetComponent<FighterAI>().dest.z += 25000;
+            Vector3 dest = (Random.insideUnitSphere * 2000) + transform.position;
+            dest.z += 25000;
+            newobj.GetComponent<FighterAI>().SetDest(dest);
             //cooldown = .001f;
             counter++;
-            Debug.Log(counter);
+            //Debug.Log(counter);
         }
 	}
 }
