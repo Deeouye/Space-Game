@@ -3,38 +3,48 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class FighterAI : MonoBehaviour {
-    
+
+    public GameObject formationLayout;
+    public FormationState formation_state;
+
     private FighterBehavior fb;
+    private FormationLayout fl;
 
     private Quaternion targetRotation;
     private GameObject target;
     private Vector3 dest;
-    public AiState state;
+    private AiState ai_state;
     private bool facingTarget;
+    private int followerPos;
+    private float timer;
 
-    public enum AiState { CHARGING, FLEEING, ROAMING };
+    enum AiState { CHARGING, FLEEING, ROAMING };
+    public enum FormationState { LEADER, FOLLOWER, SEARCHING };
 
 	// Use this for initialization
 	void Start () {
         fb = GetComponent<FighterBehavior>();
-        state = AiState.CHARGING;
+        fl = formationLayout.GetComponent<FormationLayout>();
+        ai_state = AiState.CHARGING;
+        formation_state = FormationState.SEARCHING;
         FindTarget(float.MaxValue);
         if (target == null)
         {
-            state = AiState.ROAMING;
+            ai_state = AiState.ROAMING;
         }
     }
 	
 	// Update is called once per frame
 	void Update () {
         fb.FighterUpdate();
+        timer += Time.deltaTime;
 	}
 
     private void FixedUpdate()
     {
         fb.firing = false;
 
-        switch (state)
+        switch (ai_state)
         {
             case AiState.CHARGING:
                 Charge();
@@ -54,7 +64,6 @@ public class FighterAI : MonoBehaviour {
     {
         dest = value;
     }
-
 
     /// <summary>
     /// This will point the fighter towards 'dest'
@@ -92,9 +101,10 @@ public class FighterAI : MonoBehaviour {
     /// </summary>
     void Charge()
     {
-        if (Vector3.Distance(transform.position, dest) < 50 || target == null)
+        if (Vector3.Distance(transform.position, dest) < 50 || target == null || timer > 7f)
         {
-            state = AiState.FLEEING;
+            timer = 0;
+            ai_state = AiState.FLEEING;
             dest = (Random.insideUnitSphere * 500) + transform.position;
             return;
         }
@@ -109,17 +119,18 @@ public class FighterAI : MonoBehaviour {
     /// </summary>
     void Flee()
     {
-        if (Vector3.Distance(transform.position, dest) < 50)
+        if (Vector3.Distance(transform.position, dest) < 50 || timer > 5f)
         {
+            timer = 0;
             FindTarget(float.MaxValue);
             if (target == null)
             {
-                state = AiState.ROAMING;
+                ai_state = AiState.ROAMING;
             }
             else
             {
                 SetDest(target.transform.position);
-                state = AiState.CHARGING;
+                ai_state = AiState.CHARGING;
             }
         }
     }
@@ -159,7 +170,40 @@ public class FighterAI : MonoBehaviour {
         }
     }
 
-    
+    void FindFormationLeader(float maxDistance)
+    {
+        GameObject[] fighters;
+        FighterAI leaderAi = null;
+        fighters = GameObject.FindGameObjectsWithTag("Fighter");
+        float closest = maxDistance;
+        foreach (GameObject fighter in fighters)
+        {
+            FighterBehavior theirfb = fighter.GetComponent<FighterBehavior>();
+            FighterAI fai = fighter.GetComponent<FighterAI>();
+            // Skip fighters not on our team
+            if (theirfb.team != fb.team) continue;
+
+            // Get the closest
+            float distance = Vector3.Distance(transform.position, fighter.transform.position);
+            if (distance < closest && fai.formation_state == FormationState.SEARCHING)
+            {
+                closest = distance;
+                leaderAi = fai;
+            }
+        }
+
+        if (leaderAi != null)
+        {
+            leaderAi.formation_state = FormationState.LEADER;
+            formation_state = FormationState.FOLLOWER;
+
+            for (int i = 0; i < leaderAi.fl.positions.Length; i++)
+            {
+            }
+        }
+    }
+
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Bullet"))

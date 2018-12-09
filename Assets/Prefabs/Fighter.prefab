@@ -757,8 +757,9 @@ MonoBehaviour:
   pitchSpeed: 1
   turnSpeed: 1
   fireRate: 4
-  bullet: {fileID: 1119784657834342, guid: dfc5938c6ce1c8e4588066229447c10d, type: 2}
   team: 2
+  bullet: {fileID: 1119784657834342, guid: dfc5938c6ce1c8e4588066229447c10d, type: 2}
+  explosion: {fileID: 1627219008178580, guid: 78c54c7f467ba624e9e306e14d09a360, type: 2}
   pitchAmt: 0
   yawAmt: 0
   boost: 0
@@ -774,3 +775,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 95742b1190b78614698ecf01d790566e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  formationLayout: {fileID: 0}
+  formation_state: 0

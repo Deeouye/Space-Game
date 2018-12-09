@@ -945,7 +945,9 @@ MonoBehaviour:
   pitchSpeed: 1
   turnSpeed: 1
   fireRate: 15
+  team: 1
   bullet: {fileID: 1119784657834342, guid: dfc5938c6ce1c8e4588066229447c10d, type: 2}
+  explosion: {fileID: 1627219008178580, guid: 78c54c7f467ba624e9e306e14d09a360, type: 2}
   pitchAmt: 0
   yawAmt: 0
   boost: 0

@@ -24,7 +24,7 @@ GameObject:
   - component: {fileID: 114103854018831830}
   m_Layer: 0
   m_Name: Visuals
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -42,7 +42,7 @@ GameObject:
   - component: {fileID: 114869283532063362}
   m_Layer: 0
   m_Name: Bullet
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -58,7 +58,7 @@ GameObject:
   - component: {fileID: 136250391115293104}
   m_Layer: 0
   m_Name: Collider
-  m_TagString: Untagged
+  m_TagString: Bullet
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -190,6 +190,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ddafd586ff120904a88651addffffae0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  team: 0
 --- !u!114 &114869283532063362
 MonoBehaviour:
   m_ObjectHideFlags: 1
